@@ -21,6 +21,10 @@ public class WebdriverExtension implements
   @Override
   public void beforeEach(ExtensionContext extensionContext) throws Exception {
 
+    //Lic activation for the demo
+    System.setProperty("vaadin.proKey", "20190510@opentrash.com/pro-705620a1-a111-486f-b9cb-876dd675874e");
+
+
     final BrowserWebDriverContainer container = new BrowserWebDriverContainer()
         .withCapabilities(new ChromeOptions())
         .withRecordingMode(RECORD_ALL , new File("./target/"))
