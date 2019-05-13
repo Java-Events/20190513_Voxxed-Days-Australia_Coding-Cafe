@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BasicTestUIRunner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RapidPM - Vaadin10 - Testcontainers</a> &gt; <a href="index.source.html" class="el_package">org.rapidpm.vaadin</a> &gt; <span class="el_source">BasicTestUIRunner.java</span></div><h1>BasicTestUIRunner.java</h1><pre class="source lang-java linenums">/**
+ * Copyright © 2017 Sven Ruppert (sven.ruppert@gmail.com)
+ * &lt;p&gt;
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * &lt;p&gt;
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * &lt;p&gt;
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.rapidpm.vaadin;
+
+import static org.rapidpm.frp.StringFunctions.notEmpty;
+import static org.rapidpm.frp.StringFunctions.notStartsWith;
+import static org.rapidpm.frp.Transformations.not;
+
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.function.Supplier;
+
+import javax.sql.DataSource;
+
+import org.apache.meecrowave.Meecrowave;
+import org.rapidpm.frp.Transformations;
+import org.rapidpm.frp.functions.CheckedPredicate;
+import org.rapidpm.frp.functions.CheckedSupplier;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+public class BasicTestUIRunner {
+  private BasicTestUIRunner() {
+  }
+
+  public static DataSource datasource;
+  public static Meecrowave meecrowave;
+
+  public static void main(String[] args) {
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    if (args.length != 3) throw new RuntimeException(&quot; arguments needed...&quot;);</span>
+<span class="nc" id="L47">    start(args[0] , args[1] , args[2]);</span>
+<span class="nc" id="L48">  }</span>
+
+  public static void start(String jdbcURL ,
+                           String username ,
+                           String password) {
+
+<span class="fc" id="L54">    datasource = createDataSource(jdbcURL ,</span>
+                                  username ,
+                                  password);
+
+<span class="fc" id="L58">    meecrowave = new Meecrowave(new Meecrowave.Builder() {</span>
+      {
+//        randomHttpPort();
+<span class="fc" id="L61">        setHttpPort(7777);</span>
+<span class="fc" id="L62">        setHost(localeIP().get());</span>
+<span class="fc" id="L63">        setTomcatScanning(true);</span>
+<span class="fc" id="L64">        setTomcatAutoSetup(true);</span>
+<span class="fc" id="L65">        setHttp2(true);</span>
+<span class="fc" id="L66">      }</span>
+    });
+<span class="fc" id="L68">    meecrowave</span>
+<span class="fc" id="L69">        .bake();</span>
+<span class="fc" id="L70">  }</span>
+
+  public static void stop() {
+<span class="fc" id="L73">    meecrowave.close();</span>
+<span class="fc" id="L74">  }</span>
+
+  private static DataSource createDataSource(String jdbcURL ,
+                                             String username ,
+                                             String password) {
+<span class="fc" id="L79">    HikariConfig hikariConfig = new HikariConfig();</span>
+<span class="fc" id="L80">    hikariConfig.setJdbcUrl(jdbcURL);</span>
+<span class="fc" id="L81">    hikariConfig.setUsername(username);</span>
+<span class="fc" id="L82">    hikariConfig.setPassword(password);</span>
+<span class="fc" id="L83">    return new HikariDataSource(hikariConfig);</span>
+  }
+  public static Supplier&lt;String&gt; localeIP() {
+<span class="fc" id="L86">    return () -&gt; {</span>
+<span class="fc" id="L87">      final CheckedSupplier&lt;Enumeration&lt;NetworkInterface&gt;&gt; checkedSupplier =</span>
+          NetworkInterface::getNetworkInterfaces;
+
+<span class="fc" id="L90">      return Transformations.&lt;NetworkInterface&gt;enumToStream()</span>
+<span class="fc" id="L91">          .apply(checkedSupplier.getOrElse(Collections::emptyEnumeration))</span>
+<span class="fc" id="L92">          .filter((CheckedPredicate&lt;NetworkInterface&gt;) NetworkInterface::isUp)</span>
+<span class="fc" id="L93">          .map(NetworkInterface::getInetAddresses)</span>
+<span class="fc" id="L94">          .flatMap(iaEnum -&gt; Transformations.&lt;InetAddress&gt;enumToStream().apply(iaEnum))</span>
+<span class="fc" id="L95">          .filter(inetAddress -&gt; inetAddress instanceof Inet4Address)</span>
+<span class="fc" id="L96">          .filter(not(InetAddress::isMulticastAddress)).filter(not(InetAddress::isLoopbackAddress))</span>
+<span class="fc" id="L97">          .map(InetAddress::getHostAddress).filter(notEmpty())</span>
+<span class="fc" id="L98">          .filter(adr -&gt; notStartsWith().apply(adr, &quot;127&quot;))</span>
+<span class="fc" id="L99">          .filter(adr -&gt; notStartsWith().apply(adr, &quot;169.254&quot;))</span>
+<span class="fc" id="L100">          .filter(adr -&gt; notStartsWith().apply(adr, &quot;255.255.255.255&quot;))</span>
+<span class="fc" id="L101">          .filter(adr -&gt; notStartsWith().apply(adr, &quot;255.255.255.255&quot;))</span>
+<span class="fc" id="L102">          .filter(adr -&gt; notStartsWith().apply(adr, &quot;0.0.0.0&quot;))</span>
+          // .filter(adr -&gt; range(224, 240).noneMatch(nr -&gt; adr.startsWith(valueOf(nr))))
+<span class="fc" id="L104">          .findFirst().orElse(&quot;localhost&quot;);</span>
+    };
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

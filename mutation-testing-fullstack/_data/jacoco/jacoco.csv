@@ -1,0 +1,7 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+RapidPM - Vaadin10 - Testcontainers,org.rapidpm.vaadin,BasicTestUIRunner,20,123,2,0,3,28,2,12,1,12
+RapidPM - Vaadin10 - Testcontainers,org.rapidpm.vaadin,MainView,0,24,0,0,0,5,0,1,0,1
+RapidPM - Vaadin10 - Testcontainers,org.rapidpm.vaadin,VaadinApp,0,15,0,0,0,3,0,1,0,1
+RapidPM - Vaadin10 - Testcontainers,org.rapidpm.vaadin,BasicTestUIRunner.new Meecrowave.Builder() {...},0,20,0,0,0,7,0,1,0,1
+RapidPM - Vaadin10 - Testcontainers,org.rapidpm.vaadin,LoginService,9,56,2,4,3,15,2,4,0,3
+RapidPM - Vaadin10 - Testcontainers,org.rapidpm.vaadin,LoginViewOO,1,155,1,1,0,31,1,2,0,2

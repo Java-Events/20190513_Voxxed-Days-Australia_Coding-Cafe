@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginViewOO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RapidPM - Vaadin10 - Testcontainers</a> &gt; <a href="index.source.html" class="el_package">org.rapidpm.vaadin</a> &gt; <span class="el_source">LoginViewOO.java</span></div><h1>LoginViewOO.java</h1><pre class="source lang-java linenums">package org.rapidpm.vaadin;
+
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.START;
+import static org.rapidpm.vaadin.LoginViewOO.NAV_LOGIN_VIEW;
+
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
+
+@Route(NAV_LOGIN_VIEW)
+public class LoginViewOO extends Composite&lt;HorizontalLayout&gt; {
+
+  public static final String NAV_LOGIN_VIEW = &quot;login&quot;;
+  public static final String USERNAME = &quot;username&quot;;
+  public static final String PASSWORD = &quot;password&quot;;
+  public static final String BTN_LOGIN = &quot;btnLogin&quot;;
+  public static final String BTN_CANCEL = &quot;btnCancel&quot;;
+
+<span class="fc" id="L25">  private final TextField username = new TextField();</span>
+<span class="fc" id="L26">  private final PasswordField password = new PasswordField();</span>
+<span class="fc" id="L27">  private final Button btnLogin = new Button();</span>
+<span class="fc" id="L28">  private final Button btnCancel = new Button();</span>
+
+<span class="fc" id="L30">  public LoginViewOO() {</span>
+<span class="fc" id="L31">    VerticalLayout groupV = new VerticalLayout(</span>
+        new HorizontalLayout(username , password) ,
+        new HorizontalLayout(btnLogin , btnCancel));
+
+<span class="fc" id="L35">    groupV.setDefaultHorizontalComponentAlignment(START);</span>
+<span class="fc" id="L36">    groupV.setSizeUndefined();</span>
+
+<span class="fc" id="L38">    username.setPlaceholder(&quot;username&quot;);</span>
+<span class="fc" id="L39">    username.setId(USERNAME);</span>
+<span class="fc" id="L40">    password.setPlaceholder(&quot;password&quot;);</span>
+<span class="fc" id="L41">    password.setId(PASSWORD);</span>
+
+<span class="fc" id="L43">    btnLogin.setText(&quot;Login&quot;);</span>
+<span class="fc" id="L44">    btnLogin.setId(BTN_LOGIN);</span>
+<span class="fc" id="L45">    btnLogin.addClickListener(e -&gt; {</span>
+<span class="fc" id="L46">      boolean ok = new LoginService(BasicTestUIRunner.datasource)</span>
+<span class="fc" id="L47">          .checkLogin(username.getValue() ,</span>
+<span class="fc" id="L48">                      password.getValue());</span>
+<span class="fc" id="L49">      username.setValue(&quot;&quot;);</span>
+<span class="fc" id="L50">      password.setValue(&quot;&quot;);</span>
+      UI
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">          .getCurrent()</span>
+<span class="fc" id="L53">          .navigate((ok)</span>
+                    ? MainView.class
+                    : LoginViewOO.class);
+<span class="fc" id="L56">    });</span>
+
+<span class="fc" id="L58">    btnCancel.setText(&quot;Cancel&quot;);</span>
+<span class="fc" id="L59">    btnCancel.setId(BTN_CANCEL);</span>
+
+<span class="fc" id="L61">    HorizontalLayout content = getContent();</span>
+<span class="fc" id="L62">    content.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);</span>
+<span class="fc" id="L63">    content.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);</span>
+<span class="fc" id="L64">    content.setSizeFull();</span>
+<span class="fc" id="L65">    content.add(groupV);</span>
+<span class="fc" id="L66">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
