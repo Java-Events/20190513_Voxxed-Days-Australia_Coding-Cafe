@@ -33,6 +33,7 @@
     <module>s002-helloworld-ini</module>
     <module>s003-items</module>
     <module>s004-lazy</module>
+<!--    <module>s005-load-release</module>-->
   </modules>
 
   <build>

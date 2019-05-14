@@ -18,8 +18,11 @@ import java.util.Random;
  * Lazy loading example. Lazy part is in {@link Order}.
  */
 public class Main {
+
+  public static final String DATA_PATH = "data-s004";
+
   public static void main(final String[] args) {
-    final EmbeddedStorageManager storageManager = EmbeddedStorage.start(new File("data"));
+    final EmbeddedStorageManager storageManager = EmbeddedStorage.start(new File(DATA_PATH));
     if (storageManager.root()
                       .get() == null) {
       storageManager.root()
